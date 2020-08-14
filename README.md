@@ -1,1 +1,1 @@
-This little app help you divide .wav audio into small pieces. It requires start time and end time table from ProTools session info
+This little app help you divide .wav audio into small pieces. It requires start time and end time table from ProTools session info.
