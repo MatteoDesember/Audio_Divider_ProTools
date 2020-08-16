@@ -171,9 +171,9 @@ def process_protools_file(default_file_dir):
         # group_table contains all group
         main_table = pd.read_csv(pro_tools_file_dir, sep="\t", skiprows=pro_tools_table_list[0]["CHANNEL_INDEX"],
                                  nrows=(pro_tools_table_list[1]["TRACK_NAME_INDEX"] - pro_tools_table_list[0][
-                                     "CHANNEL_INDEX"] - 3), skipinitialspace=True)
+                                     "CHANNEL_INDEX"] - 3), skipinitialspace=True, encoding=pro_tools_file.encoding)
         group_table = pd.read_csv(pro_tools_file_dir, sep="\t", skiprows=pro_tools_table_list[1]["CHANNEL_INDEX"],
-                                  skipinitialspace=True)
+                                  skipinitialspace=True, encoding=pro_tools_file.encoding)
 
         # Remove blank spaces in each columns
         main_table.columns = main_table.columns.str.strip()
