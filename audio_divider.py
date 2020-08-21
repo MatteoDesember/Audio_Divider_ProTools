@@ -7,13 +7,12 @@ from collections import Counter
 from pydub import AudioSegment
 import pandas as pd
 
-'''
-    divide_audio splits one audio file into many parts.
-    group_table_num contains split time array [start_time, end_time] and file_name
-'''
-
 
 def divide_audio(audio, group_table_num):
+    """
+    divide_audio splits one audio file into many parts.
+    group_table_num contains split time array [start_time, end_time] and file_name
+    """
     # Create output folder if no exists
     if not os.path.exists(TEMP_FOLDER):
         os.makedirs(TEMP_FOLDER)
@@ -33,25 +32,19 @@ def divide_audio(audio, group_table_num):
         print("Dividing " + str(index + 1) + "/" + str(len(group_table_num)) + " OK!")
 
 
-'''
-    text_to_milliseconds function convert given text in "m:s.fff" format into milliseconds, so it is easy to compare
-'''
-
-
 def text_to_milliseconds(text):
+    """text_to_milliseconds function convert given text in "m:s.fff" format into milliseconds, so it is easy to compare"""
     # Split text into minutes, seconds and milliseconds
     minutes, seconds, milliseconds = re.split("[:.]", text)
     return int(minutes) * 60 * 1000 + int(seconds) * 1000 + int(milliseconds)
 
 
-'''
+def check_global_table(main_table_num, group_table_num):
+    """
     check_global_table compares main_table_num to group_table_num
     if start time and end time for every group is found in clip table is ok
     Otherwise user should change groups in ProTools session
-'''
-
-
-def check_global_table(main_table_num, group_table_num):
+    """
     iterator = 0  # iterator point on analyzing element in group_table
     ok = True
     # For each group in group track
@@ -91,14 +84,12 @@ def check_global_table(main_table_num, group_table_num):
     return ok
 
 
-'''
+def process_pro_tools_file(lines):
+    """
     process_pro_tools_file processes ProTools.txt file
     This function finds two tables (main_table, group_table)
     and return their start, end indexes
-'''
-
-
-def process_pro_tools_file(lines):
+    """
     table_list = []  # list contains two dictionary: indexes when table start and their name
     dictionary = {}  # dictionary contains table start index and name
     for index, line in enumerate(lines):
@@ -111,12 +102,8 @@ def process_pro_tools_file(lines):
     return table_list
 
 
-'''
-    open_file_dialog opens file dialog and return selected file chosen by user as string
-'''
-
-
 def open_file_dialog():
+    """open_file_dialog opens file dialog and return selected file chosen by user as string"""
     root = tk.Tk()
     root.withdraw()
     file = tk.filedialog.askopenfilename()
@@ -125,13 +112,11 @@ def open_file_dialog():
     return file
 
 
-'''
+def select_file(default_file_dir):
+    """
     select_file function opens file given in default_file_dir or after selecting file with open file dialog
     if it can't open file return False
-'''
-
-
-def select_file(default_file_dir):
+    """
     file_dir = default_file_dir
     try:
         # Try to open default file
@@ -149,14 +134,12 @@ def select_file(default_file_dir):
         return False, False
 
 
-'''
+def process_protools_file(default_file_dir):
+    """
     process_protools_file function checks if start_time and end_time
     in group_table and main_table (group_track and main_track) matched
     if so return True and group_track wchich is numpy array with start and end time
-'''
-
-
-def process_protools_file(default_file_dir):
+    """
     pro_tools_file, pro_tools_file_dir = select_file(default_file_dir=default_file_dir)
 
     if pro_tools_file:
@@ -189,13 +172,11 @@ def process_protools_file(default_file_dir):
         return is_ok, group_table
 
 
-'''
+def process_filenames_file(default_file_dir, how_many_files):
+    """
     process_filenames_file processes filenames file. This function checks if there is no duplicates
     and if there is as filenames as group start_times, end_times
-'''
-
-
-def process_filenames_file(default_file_dir, how_many_files):
+    """
     new_file_names, new_file_names_dir = select_file(default_file_dir=default_file_dir)
     if new_file_names:
 
@@ -224,12 +205,8 @@ def process_filenames_file(default_file_dir, how_many_files):
         return range(1, how_many_files + 1)
 
 
-'''
-    process_wav_file processes wav file and split it into parts
-'''
-
-
 def process_wav_file(default_file_dir, wav_file_names):
+    """process_wav_file processes wav file and split it into parts"""
     # Choose audio to split
     wav_file, wav_file_dir = select_file(default_file_dir=default_file_dir)
     if wav_file:
@@ -240,10 +217,8 @@ def process_wav_file(default_file_dir, wav_file_names):
 # This is output folder
 TEMP_FOLDER = 'ProTools'
 
-'''
-    This is little console for user
-'''
 while True:
+    """This is little console for user"""
     to_do = input("Tell me what do you wanna do: \r\n")
     if to_do == 'exit' or to_do == 'e':
         break
